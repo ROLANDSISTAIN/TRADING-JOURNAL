@@ -1,0 +1,1576 @@
+<!DOCTYPE html><html lang="fr"><head><meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://code.jquery.com https://unpkg.com https://d3js.org https://threejs.org https://cdn.plot.ly https://stackpath.bootstrapcdn.com https://maps.googleapis.com https://cdn.tailwindcss.com https://ajax.googleapis.com https://kit.fontawesome.com https://cdn.datatables.net https://maxcdn.bootstrapcdn.com https://code.highcharts.com https://tako-static-assets-production.s3.amazonaws.com https://www.youtube.com https://fonts.googleapis.com https://fonts.gstatic.com https://pfst.cf2.poecdn.net https://puc.poecdn.net https://i.imgur.com https://wikimedia.org https://*.icons8.com https://*.giphy.com https://picsum.photos https://images.unsplash.com; frame-src 'self' https://www.youtube.com https://trytako.com; child-src 'self'; manifest-src 'self'; worker-src 'self'; upgrade-insecure-requests; block-all-mixed-content;">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TradePro Journal - Plateforme de Trading Professionnel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#5D5CDE',
+                        secondary: '#10B981',
+                        accent: '#F59E0B',
+                        success: '#10B981',
+                        danger: '#EF4444',
+                        warning: '#F59E0B',
+                        crypto: '#F7931A'
+                    },
+                    fontFamily: {
+                        'sans': ['Inter', 'ui-sans-serif', 'system-ui'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        
+        .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .crypto-glow { box-shadow: 0 0 20px rgba(247, 147, 26, 0.3); }
+        .fade-in { animation: fadeIn 0.5s ease-in; }
+        .slide-up { animation: slideUp 0.6s ease-out; }
+        .pulse-crypto { animation: pulseCrypto 2s infinite; }
+        
+        @keyframes fadeIn { 
+            from { opacity: 0; transform: translateY(20px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
+        @keyframes slideUp { 
+            from { opacity: 0; transform: translateY(50px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
+        @keyframes pulseCrypto { 
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        .profit { color: #10B981; }
+        .loss { color: #EF4444; }
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .dark .glass-effect {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .qr-container {
+            background: white;
+            padding: 15px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .payment-card {
+            background: linear-gradient(145deg, #ffffff, #f8fafc);
+            border: 2px solid #e2e8f0;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+        .dark .payment-card {
+            background: linear-gradient(145deg, #1e293b, #334155);
+            border: 2px solid #475569;
+        }
+        
+        .success-checkmark {
+            animation: checkmark 0.6s ease-in-out;
+        }
+        @keyframes checkmark {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        
+        .whatsapp-btn {
+            background: linear-gradient(145deg, #25D366, #128C7E);
+            transition: all 0.3s ease;
+        }
+        .whatsapp-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(37, 211, 102, 0.3);
+        }
+
+        /* Mobile optimizations */
+        @media (max-width: 768px) {
+            .qr-container {
+                padding: 10px;
+            }
+            .qr-container canvas {
+                width: 150px !important;
+                height: 150px !important;
+            }
+            .mobile-scroll {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+            .mobile-card {
+                min-width: 280px;
+            }
+            .mobile-table {
+                min-width: 600px;
+            }
+        }
+
+        /* Custom scrollbar for mobile tables */
+        .mobile-scroll::-webkit-scrollbar {
+            height: 4px;
+        }
+        .mobile-scroll::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        .mobile-scroll::-webkit-scrollbar-thumb {
+            background: #5D5CDE;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white transition-all duration-300">
+
+    <!-- Landing Page -->
+    <div id="landingPage" class="min-h-screen gradient-bg flex items-center justify-center px-4">
+        <div class="max-w-6xl mx-auto text-center text-white">
+            <div class="slide-up">
+                <div class="mb-6 md:mb-8">
+                    <i class="fas fa-chart-line text-4xl md:text-6xl mb-4 md:mb-6 pulse-crypto"></i>
+                    <h1 class="text-3xl md:text-5xl lg:text-7xl font-bold mb-2 md:mb-4">TradePro Journal</h1>
+                    <p class="text-lg md:text-xl lg:text-2xl opacity-90 mb-6 md:mb-8 px-4">La plateforme professionnelle pour trader avec succès</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mb-8 md:mb-12">
+                    <div class="glass-effect p-4 md:p-6 rounded-xl">
+                        <i class="fas fa-analytics text-2xl md:text-3xl mb-3 md:mb-4 text-yellow-300"></i>
+                        <h3 class="text-lg md:text-xl font-semibold mb-2">Analyses Avancées</h3>
+                        <p class="opacity-80 text-sm md:text-base">Statistiques détaillées et graphiques en temps réel</p>
+                    </div>
+                    <div class="glass-effect p-4 md:p-6 rounded-xl">
+                        <i class="fas fa-shield-alt text-2xl md:text-3xl mb-3 md:mb-4 text-green-300"></i>
+                        <h3 class="text-lg md:text-xl font-semibold mb-2">Sécurisé</h3>
+                        <p class="opacity-80 text-sm md:text-base">Vos données protégées avec le plus haut niveau de sécurité</p>
+                    </div>
+                    <div class="glass-effect p-4 md:p-6 rounded-xl">
+                        <i class="fas fa-mobile-alt text-2xl md:text-3xl mb-3 md:mb-4 text-blue-300"></i>
+                        <h3 class="text-lg md:text-xl font-semibold mb-2">Multi-plateforme</h3>
+                        <p class="opacity-80 text-sm md:text-base">Accessible partout, sur tous vos appareils</p>
+                    </div>
+                </div>
+                
+                <div class="space-y-3 sm:space-y-0 sm:space-x-4 sm:flex sm:justify-center px-4">
+                    <button id="loginBtn" class="w-full sm:w-auto bg-white text-gray-800 font-semibold py-3 md:py-4 px-6 md:px-8 rounded-xl hover:bg-gray-100 transition-all duration-300 transform hover:scale-105">
+                        <i class="fas fa-sign-in-alt mr-2"></i>Se connecter
+                    </button>
+                    <button id="signupBtn" class="w-full sm:w-auto bg-yellow-500 text-gray-900 font-semibold py-3 md:py-4 px-6 md:px-8 rounded-xl hover:bg-yellow-400 transition-all duration-300 transform hover:scale-105">
+                        <i class="fas fa-star mr-2"></i>Commencer maintenant
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Modal -->
+    <div id="paymentModal" class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 hidden px-2 md:px-4">
+        <div class="payment-card p-4 md:p-8 rounded-2xl max-w-lg w-full mx-2 md:mx-4 fade-in max-h-[95vh] overflow-y-auto">
+            <div class="text-center mb-6 md:mb-8">
+                <div class="w-12 h-12 md:w-16 md:h-16 bg-crypto rounded-full flex items-center justify-center mx-auto mb-4 crypto-glow">
+                    <i class="fab fa-bitcoin text-xl md:text-2xl text-white"></i>
+                </div>
+                <h2 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-2">Accès Premium</h2>
+                <p class="text-gray-600 dark:text-gray-400 text-sm md:text-base">Rejoignez des milliers de traders professionnels</p>
+            </div>
+
+            <div class="bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-900 dark:to-blue-900 p-4 md:p-6 rounded-xl mb-4 md:mb-6">
+                <div class="text-center">
+                    <div class="text-3xl md:text-4xl font-bold text-primary mb-2">5 USDT</div>
+                    <div class="text-xs md:text-sm text-gray-600 dark:text-gray-400">Accès à vie • Toutes les fonctionnalités</div>
+                </div>
+            </div>
+
+            <!-- Features Description -->
+            <div class="bg-blue-50 dark:bg-blue-900 p-4 md:p-6 rounded-xl mb-4 md:mb-6">
+                <h3 class="text-base md:text-lg font-semibold text-gray-900 dark:text-white mb-3 md:mb-4 text-center">
+                    <i class="fas fa-star mr-2 text-yellow-500"></i>Ce que vous obtiendrez :
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
+                    <div class="flex items-start space-x-3">
+                        <i class="fas fa-chart-line text-green-500 mt-1 flex-shrink-0"></i>
+                        <div>
+                            <h4 class="font-medium text-gray-900 dark:text-white text-sm">Journal de Trading Complet</h4>
+                            <p class="text-xs text-gray-600 dark:text-gray-400">Enregistrez tous vos trades avec détails</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <i class="fas fa-analytics text-blue-500 mt-1 flex-shrink-0"></i>
+                        <div>
+                            <h4 class="font-medium text-gray-900 dark:text-white text-sm">Statistiques Avancées</h4>
+                            <p class="text-xs text-gray-600 dark:text-gray-400">Win rate, P&amp;L, graphiques en temps réel</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <i class="fas fa-camera text-purple-500 mt-1 flex-shrink-0"></i>
+                        <div>
+                            <h4 class="font-medium text-gray-900 dark:text-white text-sm">Screenshots &amp; Notes</h4>
+                            <p class="text-xs text-gray-600 dark:text-gray-400">Ajoutez vos setups et analyses</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <i class="fas fa-mobile-alt text-orange-500 mt-1 flex-shrink-0"></i>
+                        <div>
+                            <h4 class="font-medium text-gray-900 dark:text-white text-sm">Multi-plateforme</h4>
+                            <p class="text-xs text-gray-600 dark:text-gray-400">PC, tablette, mobile - partout !</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <i class="fas fa-cloud text-indigo-500 mt-1 flex-shrink-0"></i>
+                        <div>
+                            <h4 class="font-medium text-gray-900 dark:text-white text-sm">Sauvegarde Automatique</h4>
+                            <p class="text-xs text-gray-600 dark:text-gray-400">Vos données toujours protégées</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <i class="fas fa-moon text-gray-500 mt-1 flex-shrink-0"></i>
+                        <div>
+                            <h4 class="font-medium text-gray-900 dark:text-white text-sm">Mode Sombre</h4>
+                            <p class="text-xs text-gray-600 dark:text-gray-400">Interface adaptée jour/nuit</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="space-y-4 md:space-y-6">
+                <div class="text-center">
+                    <p class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3 md:mb-4">Scanlez le QR code ou copiez l'adresse :</p>
+                    <div class="qr-container mx-auto w-fit mb-3 md:mb-4">
+                        <canvas id="qrcode" width="200" height="200"></canvas>
+                    </div>
+                    <div class="bg-gray-100 dark:bg-gray-700 p-3 md:p-4 rounded-lg">
+                        <p class="text-xs text-gray-600 dark:text-gray-400 mb-2">Adresse USDT (TRON TRC20):</p>
+                        <div class="flex items-center space-x-2">
+                            <code id="cryptoAddress" class="text-xs md:text-sm font-mono bg-white dark:bg-gray-800 p-2 rounded border flex-1 text-center break-all">TQTjyggYLQsCVYTAKP2toWZ8NMY3dh4nqb</code>
+                            <button onclick="copyAddress()" class="bg-primary text-white p-2 rounded hover:bg-purple-600 transition-colors flex-shrink-0">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-yellow-50 dark:bg-yellow-900 p-3 md:p-4 rounded-lg border border-yellow-200 dark:border-yellow-700">
+                    <div class="flex items-start space-x-3">
+                        <i class="fas fa-info-circle text-yellow-600 dark:text-yellow-400 mt-1 flex-shrink-0"></i>
+                        <div class="text-xs md:text-sm text-yellow-800 dark:text-yellow-200">
+                            <p class="font-semibold mb-2">Instructions importantes :</p>
+                            <ol class="list-decimal list-inside space-y-1">
+                                <li>Envoyez exactement <strong>5 USDT</strong> via le réseau <strong>TRON (TRC20)</strong></li>
+                                <li>Après le paiement, contactez-nous sur WhatsApp avec votre nom d'utilisateur</li>
+                                <li>Vous recevrez votre mot de passe dans les 24h</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-green-50 dark:bg-green-900 p-4 md:p-6 rounded-lg border border-green-200 dark:border-green-700">
+                    <div class="text-center mb-3 md:mb-4">
+                        <i class="fab fa-whatsapp text-2xl md:text-3xl text-green-500 mb-2"></i>
+                        <h3 class="text-base md:text-lg font-semibold text-gray-900 dark:text-white">Contactez-nous après paiement</h3>
+                        <p class="text-xs md:text-sm text-gray-600 dark:text-gray-400">Nos numéros WhatsApp disponibles 24h/7j</p>
+                    </div>
+                    <div class="grid grid-cols-1 gap-3">
+                        <a href="https://wa.me/22879867879" target="_blank" class="whatsapp-btn text-white py-3 px-4 rounded-lg text-center font-medium flex items-center justify-center">
+                            <i class="fab fa-whatsapp mr-2 text-lg md:text-xl"></i>
+                            <div class="text-left">
+                                <div class="font-semibold text-sm md:text-base">+228 79 86 78 79</div>
+                                <div class="text-xs opacity-90">Support Principal</div>
+                            </div>
+                        </a>
+                        <a href="https://wa.me/22899096690" target="_blank" class="whatsapp-btn text-white py-3 px-4 rounded-lg text-center font-medium flex items-center justify-center">
+                            <i class="fab fa-whatsapp mr-2 text-lg md:text-xl"></i>
+                            <div class="text-left">
+                                <div class="font-semibold text-sm md:text-base">+228 99 09 66 90</div>
+                                <div class="text-xs opacity-90">Support Secondaire</div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="border-t border-gray-200 dark:border-gray-600 pt-4 md:pt-6">
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium mb-2">Nom d'utilisateur souhaité :</label>
+                        <input type="text" id="desiredUsername" class="w-full px-3 md:px-4 py-3 text-base border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white" placeholder="Entrez votre nom d'utilisateur" required="">
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Gardez ce nom pour le communiquer via WhatsApp</p>
+                    </div>
+                </div>
+
+                <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-3">
+                    <button id="closePayment" class="flex-1 bg-gray-500 hover:bg-gray-600 text-white font-medium py-3 px-4 md:px-6 rounded-lg transition-colors text-sm">
+                        Annuler
+                    </button>
+                    <button id="confirmPayment" class="flex-1 bg-primary hover:bg-purple-600 text-white font-medium py-3 px-4 md:px-6 rounded-lg transition-colors text-sm">
+                        J'ai effectué le paiement
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div id="authModal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 hidden px-4">
+        <div class="bg-white dark:bg-gray-800 p-6 md:p-8 rounded-xl shadow-2xl max-w-md w-full mx-4">
+            <div class="text-center mb-6">
+                <i class="fas fa-chart-line text-3xl md:text-4xl text-primary mb-4"></i>
+                <h2 class="text-xl md:text-2xl font-bold text-gray-900 dark:text-white">Connexion</h2>
+                <p class="text-gray-600 dark:text-gray-400 text-sm md:text-base">Accédez à votre journal de trading</p>
+            </div>
+            <form id="authForm">
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-2">Nom d'utilisateur</label>
+                    <input type="text" id="usernameInput" class="w-full px-4 py-3 text-base border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white" placeholder="Votre nom d'utilisateur" required="">
+                </div>
+                <div class="mb-6">
+                    <label class="block text-sm font-medium mb-2">Mot de passe</label>
+                    <input type="password" id="passwordInput" class="w-full px-4 py-3 text-base border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white" placeholder="Votre mot de passe" required="">
+                </div>
+                <button type="submit" class="w-full bg-primary hover:bg-purple-600 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200 mb-3">
+                    <i class="fas fa-sign-in-alt mr-2"></i>Se connecter
+                </button>
+                <button type="button" id="backToLanding" class="w-full bg-gray-500 hover:bg-gray-600 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200">
+                    <i class="fas fa-arrow-left mr-2"></i>Retour
+                </button>
+            </form>
+            <div id="authError" class="mt-4 text-red-500 text-sm text-center hidden"></div>
+        </div>
+    </div>
+
+    <!-- Admin Panel Modal -->
+    <div id="adminModal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 hidden px-2 md:px-4">
+        <div class="bg-white dark:bg-gray-800 p-4 md:p-8 rounded-xl shadow-2xl max-w-2xl w-full mx-2 md:mx-4 max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-4 md:mb-6">
+                <h2 class="text-xl md:text-2xl font-bold text-gray-900 dark:text-white">
+                    <i class="fas fa-cog mr-2"></i>Panneau d'administration
+                </h2>
+                <button id="closeAdmin" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+                    <i class="fas fa-times text-lg md:text-xl"></i>
+                </button>
+            </div>
+
+            <div class="space-y-4 md:space-y-6">
+                <!-- Password Generator -->
+                <div class="bg-gray-50 dark:bg-gray-700 p-4 md:p-6 rounded-lg">
+                    <h3 class="text-base md:text-lg font-semibold mb-3 md:mb-4 text-gray-900 dark:text-white">
+                        <i class="fas fa-key mr-2"></i>Générateur de mots de passe
+                    </h3>
+                    <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-3">
+                        <input type="text" id="generatedPassword" class="flex-1 px-3 md:px-4 py-3 text-base border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white" readonly="">
+                        <button id="generatePassword" class="bg-primary hover:bg-purple-600 text-white px-4 md:px-6 py-3 rounded-lg transition-colors text-sm whitespace-nowrap">
+                            <i class="fas fa-refresh mr-2"></i>Générer
+                        </button>
+                        <button onclick="copyPassword()" class="bg-green-500 hover:bg-green-600 text-white px-4 md:px-6 py-3 rounded-lg transition-colors">
+                            <i class="fas fa-copy"></i>
+                        </button>
+                    </div>
+                    <p class="text-xs md:text-sm text-gray-600 dark:text-gray-400 mt-2">Générez des mots de passe sécurisés pour vos clients</p>
+                </div>
+
+                <!-- User Management -->
+                <div class="bg-gray-50 dark:bg-gray-700 p-4 md:p-6 rounded-lg">
+                    <h3 class="text-base md:text-lg font-semibold mb-3 md:mb-4 text-gray-900 dark:text-white">
+                        <i class="fas fa-users mr-2"></i>Gestion des utilisateurs
+                    </h3>
+                    <div class="space-y-3">
+                        <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-3">
+                            <input type="text" id="newUserUsername" class="flex-1 px-3 md:px-4 py-3 text-base border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white" placeholder="Nom d'utilisateur">
+                            <input type="password" id="newUserPassword" class="flex-1 px-3 md:px-4 py-3 text-base border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white" placeholder="Mot de passe">
+                            <button id="createUser" class="bg-green-500 hover:bg-green-600 text-white px-4 md:px-6 py-3 rounded-lg transition-colors text-sm whitespace-nowrap">
+                                <i class="fas fa-plus mr-2"></i>Créer
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- User List -->
+                <div class="bg-gray-50 dark:bg-gray-700 p-4 md:p-6 rounded-lg">
+                    <h3 class="text-base md:text-lg font-semibold mb-3 md:mb-4 text-gray-900 dark:text-white">
+                        <i class="fas fa-list mr-2"></i>Liste des utilisateurs
+                    </h3>
+                    <div id="usersList" class="space-y-2 max-h-60 overflow-y-auto">
+                        <!-- Users will be listed here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Payment Modal -->
+    <div id="successModal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 hidden px-4">
+        <div class="bg-white dark:bg-gray-800 p-6 md:p-8 rounded-xl shadow-2xl max-w-md w-full mx-4 text-center">
+            <div class="success-checkmark mb-4 md:mb-6">
+                <i class="fas fa-check-circle text-5xl md:text-6xl text-green-500"></i>
+            </div>
+            <h2 class="text-xl md:text-2xl font-bold text-gray-900 dark:text-white mb-3 md:mb-4">Parfait !</h2>
+            <p class="text-gray-600 dark:text-gray-400 mb-4 md:mb-6 text-sm md:text-base">Votre demande a été enregistrée. Contactez-nous sur WhatsApp avec votre nom d'utilisateur pour recevoir votre mot de passe.</p>
+            <div class="bg-green-50 dark:bg-green-900 p-3 md:p-4 rounded-lg mb-4 md:mb-6">
+                <p class="text-sm text-green-800 dark:text-green-200 font-medium">
+                    <i class="fab fa-whatsapp mr-2"></i>Numéros WhatsApp :
+                </p>
+                <p class="text-green-700 dark:text-green-300 text-sm">
+                    +228 79 86 78 79 ou +228 99 09 66 90
+                </p>
+            </div>
+            <button id="closeSuccess" class="w-full bg-primary hover:bg-purple-600 text-white font-medium py-3 px-6 rounded-lg transition-colors">
+                Fermer
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Application -->
+    <div id="mainApp" class="hidden">
+        <!-- Header -->
+        <header class="bg-white dark:bg-gray-800 shadow-lg border-b-2 border-primary/20 sticky top-0 z-40">
+            <div class="container mx-auto px-4 py-3 md:py-4">
+                <div class="flex items-center justify-between flex-wrap gap-2 md:gap-4">
+                    <div class="flex items-center">
+                        <i class="fas fa-chart-line text-xl md:text-2xl text-primary mr-2 md:mr-3"></i>
+                        <div>
+                            <h1 class="text-lg md:text-xl font-bold text-gray-900 dark:text-white">TradePro Journal</h1>
+                            <p class="text-xs md:text-sm text-gray-600 dark:text-gray-400" id="currentUserDisplay"></p>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-1 md:space-x-2 flex-wrap">
+                        <button id="themeToggle" class="p-2 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
+                            <i class="fas fa-moon dark:hidden text-sm"></i>
+                            <i class="fas fa-sun hidden dark:inline text-sm"></i>
+                        </button>
+                        <button id="adminBtn" class="px-2 md:px-3 py-2 bg-purple-100 dark:bg-purple-900 hover:bg-purple-200 dark:hover:bg-purple-800 text-purple-600 dark:text-purple-300 rounded-lg transition-colors text-xs md:text-sm hidden">
+                            <i class="fas fa-cog mr-1"></i><span class="hidden sm:inline">Admin</span>
+                        </button>
+                        <button id="settingsBtn" class="px-2 md:px-3 py-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg transition-colors text-xs md:text-sm">
+                            <i class="fas fa-cog mr-1"></i><span class="hidden sm:inline">Paramètres</span>
+                        </button>
+                        <button id="logoutBtn" class="px-2 md:px-3 py-2 bg-red-100 hover:bg-red-200 text-red-600 rounded-lg transition-colors text-xs md:text-sm">
+                            <i class="fas fa-sign-out-alt mr-1"></i><span class="hidden sm:inline">Déconnexion</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Dashboard Stats -->
+        <div class="container mx-auto px-4 py-4 md:py-6">
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6 mb-6 md:mb-8">
+                <div class="bg-white dark:bg-gray-800 p-4 md:p-6 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 hover:shadow-xl transition-shadow mobile-card">
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                        <div class="mb-2 sm:mb-0">
+                            <p class="text-xs md:text-sm text-gray-600 dark:text-gray-400">Solde Total</p>
+                            <p id="totalBalance" class="text-lg md:text-2xl font-bold text-gray-900 dark:text-white">$0.00</p>
+                        </div>
+                        <i class="fas fa-wallet text-lg md:text-2xl text-primary self-start sm:self-center"></i>
+                    </div>
+                </div>
+                <div class="bg-white dark:bg-gray-800 p-4 md:p-6 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 hover:shadow-xl transition-shadow mobile-card">
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                        <div class="mb-2 sm:mb-0">
+                            <p class="text-xs md:text-sm text-gray-600 dark:text-gray-400">P&amp;L Aujourd'hui</p>
+                            <p id="todayPnL" class="text-lg md:text-2xl font-bold">$0.00</p>
+                        </div>
+                        <i class="fas fa-chart-line text-lg md:text-2xl text-success self-start sm:self-center"></i>
+                    </div>
+                </div>
+                <div class="bg-white dark:bg-gray-800 p-4 md:p-6 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 hover:shadow-xl transition-shadow mobile-card">
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                        <div class="mb-2 sm:mb-0">
+                            <p class="text-xs md:text-sm text-gray-600 dark:text-gray-400">Win Rate</p>
+                            <p id="winRate" class="text-lg md:text-2xl font-bold text-gray-900 dark:text-white">0%</p>
+                        </div>
+                        <i class="fas fa-percentage text-lg md:text-2xl text-warning self-start sm:self-center"></i>
+                    </div>
+                </div>
+                <div class="bg-white dark:bg-gray-800 p-4 md:p-6 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 hover:shadow-xl transition-shadow mobile-card">
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                        <div class="mb-2 sm:mb-0">
+                            <p class="text-xs md:text-sm text-gray-600 dark:text-gray-400">Trades Total</p>
+                            <p id="totalTrades" class="text-lg md:text-2xl font-bold text-gray-900 dark:text-white">0</p>
+                        </div>
+                        <i class="fas fa-exchange-alt text-lg md:text-2xl text-primary self-start sm:self-center"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chart Section -->
+            <div class="bg-white dark:bg-gray-800 p-4 md:p-6 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 mb-6 md:mb-8">
+                <h3 class="text-base md:text-lg font-semibold mb-3 md:mb-4 text-gray-900 dark:text-white">
+                    <i class="fas fa-chart-area mr-2"></i>Évolution du Portfolio
+                </h3>
+                <div class="h-64 md:h-80">
+                    <canvas id="portfolioChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Trade Entry Form -->
+            <div class="bg-white dark:bg-gray-800 p-4 md:p-6 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 mb-6 md:mb-8">
+                <h3 class="text-base md:text-lg font-semibold mb-3 md:mb-4 text-gray-900 dark:text-white">
+                    <i class="fas fa-plus mr-2"></i>Nouveau Trade
+                </h3>
+                <form id="tradeForm" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Date &amp; Heure</label>
+                        <input type="datetime-local" id="tradeDate" class="w-full px-3 md:px-4 py-3 text-base border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white" required="">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Paire</label>
+                        <select id="currencyPair" class="w-full px-3 md:px-4 py-3 text-base border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white" required="">
+                            <option value="">Sélectionner une paire</option>
+                            <optgroup label="Majeures">
+                                <option value="EUR/USD">EUR/USD</option>
+                                <option value="GBP/USD">GBP/USD</option>
+                                <option value="USD/JPY">USD/JPY</option>
+                                <option value="USD/CHF">USD/CHF</option>
+                                <option value="AUD/USD">AUD/USD</option>
+                                <option value="USD/CAD">USD/CAD</option>
+                                <option value="NZD/USD">NZD/USD</option>
+                            </optgroup>
+                            <optgroup label="Mineures">
+                                <option value="EUR/GBP">EUR/GBP</option>
+                                <option value="EUR/JPY">EUR/JPY</option>
+                                <option value="GBP/JPY">GBP/JPY</option>
+                                <option value="CHF/JPY">CHF/JPY</option>
+                                <option value="EUR/CHF">EUR/CHF</option>
+                                <option value="GBP/CHF">GBP/CHF</option>
+                            </optgroup>
+                            <optgroup label="Crypto &amp; Commodités">
+                                <option value="BTC/USD">BTC/USD</option>
+                                <option value="ETH/USD">ETH/USD</option>
+                                <option value="XAU/USD">XAU/USD (Or)</option>
+                                <option value="XAG/USD">XAG/USD (Argent)</option>
+                            </optgroup>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Type</label>
+                        <select id="tradeType" class="w-full px-3 md:px-4 py-3 text-base border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white" required="">
+                            <option value="">Type de trade</option>
+                            <option value="Long">Long (Achat)</option>
+                            <option value="Short">Short (Vente)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Taille Position</label>
+                        <input type="number" id="positionSize" step="0.01" class="w-full px-3 md:px-4 py-3 text-base border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white" placeholder="0.10" required="">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Prix d'entrée</label>
+                        <input type="number" id="entryPrice" step="0.00001" class="w-full px-3 md:px-4 py-3 text-base border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white" placeholder="1.2000" required="">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Stop Loss</label>
+                        <input type="number" id="stopLoss" step="0.00001" class="w-full px-3 md:px-4 py-3 text-base border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white" placeholder="1.1950">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Take Profit</label>
+                        <input type="number" id="takeProfit" step="0.00001" class="w-full px-3 md:px-4 py-3 text-base border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white" placeholder="1.2100">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">P&amp;L ($)</label>
+                        <input type="number" id="pnl" step="0.01" class="w-full px-3 md:px-4 py-3 text-base border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white" placeholder="100.00">
+                    </div>
+                    <div class="md:col-span-2 lg:col-span-4">
+                        <label class="block text-sm font-medium mb-2">Setup &amp; Notes</label>
+                        <textarea id="tradeNotes" rows="3" class="w-full px-3 md:px-4 py-3 text-base border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white" placeholder="Décrivez votre setup, analyse technique, raisons d'entrée..."></textarea>
+                    </div>
+                    <div class="md:col-span-2 lg:col-span-4">
+                        <label class="block text-sm font-medium mb-2">Screenshots</label>
+                        <input type="file" id="tradeScreenshots" multiple="" accept="image/*" class="w-full px-3 md:px-4 py-3 text-base border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+                        <p class="text-xs md:text-sm text-gray-500 dark:text-gray-400 mt-1">Ajoutez des captures d'écran de vos setups</p>
+                        <div id="imagePreview" class="mt-4 grid grid-cols-2 md:grid-cols-4 gap-4 hidden"></div>
+                    </div>
+                    <div class="md:col-span-2 lg:col-span-4">
+                        <button type="submit" class="w-full md:w-auto bg-primary hover:bg-purple-600 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200">
+                            <i class="fas fa-plus mr-2"></i>Ajouter Trade
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Trades Table -->
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
+                <div class="p-4 md:p-6 border-b border-gray-200 dark:border-gray-700">
+                    <h3 class="text-base md:text-lg font-semibold text-gray-900 dark:text-white">
+                        <i class="fas fa-history mr-2"></i>Historique des Trades
+                    </h3>
+                </div>
+                <div class="mobile-scroll">
+                    <div id="tradesContainer">
+                        <div class="p-6 md:p-8 text-center text-gray-500 dark:text-gray-400">
+                            <i class="fas fa-chart-line text-3xl md:text-4xl mb-4 text-gray-300 dark:text-gray-600"></i>
+                            <p class="text-sm md:text-base">Aucun trade enregistré. Ajoutez votre premier trade ci-dessus.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden px-4">
+        <div class="bg-white dark:bg-gray-800 p-4 md:p-6 rounded-xl shadow-lg max-w-md w-full mx-4">
+            <div class="flex justify-between items-center mb-4 md:mb-6">
+                <h3 class="text-base md:text-lg font-semibold text-gray-900 dark:text-white">Paramètres</h3>
+                <button id="closeSettings" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="space-y-4 md:space-y-6">
+                <div>
+                    <label class="block text-sm font-medium mb-2">Montant initial du compte ($)</label>
+                    <input type="number" id="initialBalanceInput" step="0.01" class="w-full px-3 md:px-4 py-3 text-base border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white" required="">
+                </div>
+                
+                <div class="border-t border-gray-200 dark:border-gray-600 pt-4 md:pt-6">
+                    <h4 class="text-sm md:text-md font-semibold mb-3 md:mb-4 text-gray-900 dark:text-white">Sécurité</h4>
+                    <button id="changePasswordFromSettings" class="w-full px-3 md:px-4 py-3 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg transition-colors text-left text-sm md:text-base">
+                        <i class="fas fa-key mr-2"></i>Changer le mot de passe
+                    </button>
+                </div>
+            </div>
+            
+            <div class="flex flex-col sm:flex-row justify-end space-y-3 sm:space-y-0 sm:space-x-3 mt-4 md:mt-6">
+                <button id="cancelSettings" class="px-4 py-2 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors text-sm">Annuler</button>
+                <button id="saveSettings" class="px-4 py-2 bg-primary text-white hover:bg-purple-600 rounded-lg transition-colors text-sm">Sauvegarder</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Change Password Modal -->
+    <div id="changePasswordModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden px-4">
+        <div class="bg-white dark:bg-gray-800 p-4 md:p-6 rounded-xl shadow-lg max-w-md w-full mx-4">
+            <h3 class="text-base md:text-lg font-semibold mb-3 md:mb-4 text-gray-900 dark:text-white">Changer le mot de passe</h3>
+            <form id="changePasswordForm">
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-2">Ancien mot de passe</label>
+                    <input type="password" id="oldPassword" class="w-full px-3 md:px-4 py-3 text-base border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white" required="">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-2">Nouveau mot de passe</label>
+                    <input type="password" id="newPassword" class="w-full px-3 md:px-4 py-3 text-base border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white" required="">
+                </div>
+                <div class="mb-4 md:mb-6">
+                    <label class="block text-sm font-medium mb-2">Confirmer nouveau mot de passe</label>
+                    <input type="password" id="confirmPassword" class="w-full px-3 md:px-4 py-3 text-base border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white" required="">
+                </div>
+                <div class="flex flex-col sm:flex-row justify-end space-y-3 sm:space-y-0 sm:space-x-3">
+                    <button type="button" id="cancelChangePassword" class="px-4 py-2 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors text-sm">Annuler</button>
+                    <button type="submit" class="px-4 py-2 bg-primary text-white hover:bg-purple-600 rounded-lg transition-colors text-sm">Changer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Enhanced application state with localStorage persistence
+        let users = {};
+        let currentUser = null;
+        let chart = null;
+        let isAuthenticated = false;
+
+        // Initialize application data with localStorage
+        function initializeData() {
+            const savedUsers = localStorage.getItem('tradepro_users');
+            if (savedUsers) {
+                users = JSON.parse(savedUsers);
+            } else {
+                // Initialize with default admin account
+                users = {
+                    'admin': {
+                        password: 'admin123',
+                        trades: [],
+                        initialBalance: 10000,
+                        role: 'admin'
+                    }
+                };
+                saveUsers();
+            }
+        }
+
+        // Save users to localStorage
+        function saveUsers() {
+            localStorage.setItem('tradepro_users', JSON.stringify(users));
+        }
+
+        // Theme management
+        function initializeTheme() {
+            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.documentElement.classList.add('dark');
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+                if (event.matches) {
+                    document.documentElement.classList.add('dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                }
+            });
+        }
+
+        // QR Code generation with responsive sizing
+        function generateQRCode() {
+            const canvas = document.getElementById('qrcode');
+            const isMobile = window.innerWidth < 768;
+            const size = isMobile ? 150 : 200;
+            
+            const qr = new QRious({
+                element: canvas,
+                value: 'TQTjyggYLQsCVYTAKP2toWZ8NMY3dh4nqb',
+                size: size,
+                background: 'white',
+                foreground: 'black',
+                level: 'M'
+            });
+        }
+
+        // Utility functions
+        function copyAddress() {
+            const address = document.getElementById('cryptoAddress').textContent;
+            navigator.clipboard.writeText(address).then(() => {
+                showCustomAlert('Adresse copiée dans le presse-papiers!', 'success');
+            });
+        }
+
+        function copyPassword() {
+            const password = document.getElementById('generatedPassword').value;
+            if (password) {
+                navigator.clipboard.writeText(password).then(() => {
+                    showCustomAlert('Mot de passe copié!', 'success');
+                });
+            }
+        }
+
+        // Password generator
+        function generateSecurePassword() {
+            const charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*";
+            let password = "";
+            for (let i = 0; i < 12; i++) {
+                password += charset.charAt(Math.floor(Math.random() * charset.length));
+            }
+            return password;
+        }
+
+        // User management functions
+        function getCurrentUserData() {
+            return currentUser ? users[currentUser] : null;
+        }
+
+        function getCurrentTrades() {
+            const userData = getCurrentUserData();
+            return userData ? userData.trades : [];
+        }
+
+        function getCurrentInitialBalance() {
+            const userData = getCurrentUserData();
+            return userData ? userData.initialBalance : 10000;
+        }
+
+        function updateCurrentUserData(data) {
+            if (currentUser && users[currentUser]) {
+                Object.assign(users[currentUser], data);
+                saveUsers(); // Save to localStorage
+            }
+        }
+
+        function authenticate(username, password) {
+            return users[username] && users[username].password === password;
+        }
+
+        function showCustomAlert(message, type = 'info') {
+            const modal = document.createElement('div');
+            modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-4';
+            modal.innerHTML = `
+                <div class="bg-white dark:bg-gray-800 p-4 md:p-6 rounded-lg shadow-lg max-w-sm w-full mx-4">
+                    <div class="flex items-start mb-4">
+                        <i class="fas fa-${type === 'success' ? 'check-circle text-green-500' : type === 'error' ? 'exclamation-circle text-red-500' : 'info-circle text-blue-500'} mr-3 mt-1 flex-shrink-0"></i>
+                        <p class="text-gray-700 dark:text-gray-300 text-sm md:text-base">${message}</p>
+                    </div>
+                    <div class="flex justify-end">
+                        <button onclick="this.closest('.fixed').remove()" class="px-4 py-2 bg-primary text-white hover:bg-purple-600 rounded transition-colors text-sm">OK</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        function showAuthError(message) {
+            const errorDiv = document.getElementById('authError');
+            errorDiv.textContent = message;
+            errorDiv.classList.remove('hidden');
+            setTimeout(() => errorDiv.classList.add('hidden'), 3000);
+        }
+
+        // Admin functions
+        function updateUsersList() {
+            const usersList = document.getElementById('usersList');
+            usersList.innerHTML = '';
+            
+            Object.keys(users).forEach(username => {
+                const user = users[username];
+                const userDiv = document.createElement('div');
+                userDiv.className = 'flex justify-between items-center p-3 bg-white dark:bg-gray-800 rounded border text-sm';
+                userDiv.innerHTML = `
+                    <div class="flex-1 min-w-0">
+                        <span class="font-medium truncate">${username}</span>
+                        ${user.role === 'admin' ? '<span class="ml-2 px-2 py-1 bg-purple-100 text-purple-800 text-xs rounded">Admin</span>' : ''}
+                    </div>
+                    <div class="space-x-2 flex-shrink-0">
+                        ${username !== 'admin' ? `<button onclick="deleteUser('${username}')" class="text-red-500 hover:text-red-700"><i class="fas fa-trash"></i></button>` : ''}
+                    </div>
+                `;
+                usersList.appendChild(userDiv);
+            });
+        }
+
+        function createNewUser() {
+            const username = document.getElementById('newUserUsername').value.trim();
+            const password = document.getElementById('newUserPassword').value;
+            
+            if (!username || !password) {
+                showCustomAlert('Veuillez remplir tous les champs', 'error');
+                return;
+            }
+            
+            if (users[username]) {
+                showCustomAlert('Cet utilisateur existe déjà', 'error');
+                return;
+            }
+            
+            users[username] = {
+                password: password,
+                trades: [],
+                initialBalance: 10000
+            };
+            
+            saveUsers(); // Save to localStorage
+            
+            document.getElementById('newUserUsername').value = '';
+            document.getElementById('newUserPassword').value = '';
+            updateUsersList();
+            showCustomAlert('Utilisateur créé avec succès!', 'success');
+        }
+
+        function deleteUser(username) {
+            if (username === 'admin') return;
+            
+            const modal = document.createElement('div');
+            modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-4';
+            modal.innerHTML = `
+                <div class="bg-white dark:bg-gray-800 p-4 md:p-6 rounded-lg shadow-lg max-w-sm w-full mx-4">
+                    <p class="text-gray-700 dark:text-gray-300 mb-4 text-sm md:text-base">Supprimer l'utilisateur "${username}" ?</p>
+                    <div class="flex flex-col sm:flex-row justify-end space-y-3 sm:space-y-0 sm:space-x-3">
+                        <button onclick="this.closest('.fixed').remove()" class="px-4 py-2 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors text-sm">Annuler</button>
+                        <button onclick="confirmDeleteUser('${username}'); this.closest('.fixed').remove();" class="px-4 py-2 bg-red-500 text-white hover:bg-red-600 rounded transition-colors text-sm">Supprimer</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        function confirmDeleteUser(username) {
+            delete users[username];
+            saveUsers(); // Save to localStorage
+            updateUsersList();
+            showCustomAlert('Utilisateur supprimé', 'success');
+        }
+
+        // Chart initialization with mobile responsiveness
+        function initializeChart() {
+            const ctx = document.getElementById('portfolioChart').getContext('2d');
+            Chart.defaults.font.size = window.innerWidth < 768 ? 10 : 12;
+            
+            chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Solde du Portfolio ($)',
+                        data: [],
+                        borderColor: '#5D5CDE',
+                        backgroundColor: 'rgba(93, 92, 222, 0.1)',
+                        borderWidth: window.innerWidth < 768 ? 1.5 : 2,
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: window.innerWidth < 768 ? 2 : 3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: document.documentElement.classList.contains('dark') ? '#fff' : '#000',
+                                font: {
+                                    size: window.innerWidth < 768 ? 10 : 12
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            ticks: {
+                                color: document.documentElement.classList.contains('dark') ? '#fff' : '#000',
+                                font: {
+                                    size: window.innerWidth < 768 ? 10 : 12
+                                },
+                                maxTicksLimit: window.innerWidth < 768 ? 5 : 10
+                            },
+                            grid: {
+                                color: document.documentElement.classList.contains('dark') ? '#374151' : '#e5e7eb'
+                            }
+                        },
+                        y: {
+                            ticks: {
+                                color: document.documentElement.classList.contains('dark') ? '#fff' : '#000',
+                                font: {
+                                    size: window.innerWidth < 768 ? 10 : 12
+                                }
+                            },
+                            grid: {
+                                color: document.documentElement.classList.contains('dark') ? '#374151' : '#e5e7eb'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateChart() {
+            if (!chart) return;
+
+            const trades = getCurrentTrades();
+            const initialBalance = getCurrentInitialBalance();
+            const sortedTrades = [...trades].sort((a, b) => new Date(a.date) - new Date(b.date));
+            let balance = initialBalance;
+            const labels = ['Début'];
+            const data = [balance];
+
+            sortedTrades.forEach(trade => {
+                if (trade.pnl) {
+                    balance += parseFloat(trade.pnl);
+                    const date = new Date(trade.date);
+                    labels.push(window.innerWidth < 768 ? 
+                        `${date.getDate()}/${date.getMonth() + 1}` : 
+                        date.toLocaleDateString());
+                    data.push(balance);
+                }
+            });
+
+            chart.data.labels = labels;
+            chart.data.datasets[0].data = data;
+            chart.update();
+        }
+
+        // Statistics and trade management
+        function updateStatistics() {
+            const trades = getCurrentTrades();
+            const initialBalance = getCurrentInitialBalance();
+            const totalPnL = trades.reduce((sum, trade) => sum + (parseFloat(trade.pnl) || 0), 0);
+            const totalBalance = initialBalance + totalPnL;
+
+            const today = new Date().toDateString();
+            const todayTrades = trades.filter(trade => new Date(trade.date).toDateString() === today);
+            const todayPnL = todayTrades.reduce((sum, trade) => sum + (parseFloat(trade.pnl) || 0), 0);
+
+            const profitableTrades = trades.filter(trade => parseFloat(trade.pnl) > 0).length;
+            const winRate = trades.length > 0 ? (profitableTrades / trades.length * 100).toFixed(1) : 0;
+
+            document.getElementById('totalBalance').textContent = `$${totalBalance.toFixed(2)}`;
+            document.getElementById('todayPnL').textContent = `$${todayPnL.toFixed(2)}`;
+            document.getElementById('todayPnL').className = `text-lg md:text-2xl font-bold ${todayPnL >= 0 ? 'profit' : 'loss'}`;
+            document.getElementById('winRate').textContent = `${winRate}%`;
+            document.getElementById('totalTrades').textContent = trades.length;
+        }
+
+        function addTrade(tradeData) {
+            const trade = {
+                id: Date.now(),
+                ...tradeData,
+                date: tradeData.date
+            };
+            
+            const userData = getCurrentUserData();
+            if (userData) {
+                userData.trades.push(trade);
+                saveUsers(); // Save to localStorage
+                renderTradesGroupedByDate();
+                updateStatistics();
+                updateChart();
+                showCustomAlert('Trade ajouté avec succès!', 'success');
+            }
+        }
+
+        function handleScreenshots(files) {
+            const imagePreview = document.getElementById('imagePreview');
+            const screenshotArray = [];
+            
+            if (files.length === 0) {
+                imagePreview.classList.add('hidden');
+                return screenshotArray;
+            }
+
+            imagePreview.classList.remove('hidden');
+            imagePreview.innerHTML = '';
+
+            Array.from(files).forEach((file, index) => {
+                if (file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        screenshotArray.push({
+                            name: file.name,
+                            dataURL: e.target.result,
+                            size: file.size
+                        });
+
+                        const imgContainer = document.createElement('div');
+                        imgContainer.className = 'relative group';
+                        imgContainer.innerHTML = `
+                            <img src="${e.target.result}" class="w-full h-20 md:h-24 object-cover rounded-lg border border-gray-300 dark:border-gray-600" alt="Screenshot ${index + 1}">
+                            <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-200 rounded-lg flex items-center justify-center">
+                                <button onclick="removeScreenshot(${index})" class="opacity-0 group-hover:opacity-100 bg-red-500 text-white rounded-full p-1.5 md:p-2 transition-opacity duration-200">
+                                    <i class="fas fa-times text-xs md:text-sm"></i>
+                                </button>
+                            </div>
+                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 truncate">${file.name}</p>
+                        `;
+                        imagePreview.appendChild(imgContainer);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            return screenshotArray;
+        }
+
+        function removeScreenshot(index) {
+            const input = document.getElementById('tradeScreenshots');
+            const dt = new DataTransfer();
+            
+            Array.from(input.files).forEach((file, i) => {
+                if (i !== index) dt.items.add(file);
+            });
+            
+            input.files = dt.files;
+            handleScreenshots(input.files);
+        }
+
+        function deleteTrade(id) {
+            const modal = document.createElement('div');
+            modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-4';
+            modal.innerHTML = `
+                <div class="bg-white dark:bg-gray-800 p-4 md:p-6 rounded-lg shadow-lg max-w-sm w-full mx-4">
+                    <p class="text-gray-700 dark:text-gray-300 mb-4 text-sm md:text-base">Supprimer ce trade ?</p>
+                    <div class="flex flex-col sm:flex-row justify-end space-y-3 sm:space-y-0 sm:space-x-3">
+                        <button onclick="this.closest('.fixed').remove()" class="px-4 py-2 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors text-sm">Annuler</button>
+                        <button onclick="confirmDeleteTrade(${id}); this.closest('.fixed').remove();" class="px-4 py-2 bg-red-500 text-white hover:bg-red-600 rounded transition-colors text-sm">Supprimer</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        function confirmDeleteTrade(id) {
+            const userData = getCurrentUserData();
+            if (userData) {
+                userData.trades = userData.trades.filter(trade => trade.id !== id);
+                saveUsers(); // Save to localStorage
+                renderTradesGroupedByDate();
+                updateStatistics();
+                updateChart();
+                showCustomAlert('Trade supprimé!', 'success');
+            }
+        }
+
+        function renderTradesGroupedByDate() {
+            const container = document.getElementById('tradesContainer');
+            const trades = getCurrentTrades();
+            
+            if (trades.length === 0) {
+                container.innerHTML = `
+                    <div class="p-6 md:p-8 text-center text-gray-500 dark:text-gray-400">
+                        <i class="fas fa-chart-line text-3xl md:text-4xl mb-4 text-gray-300 dark:text-gray-600"></i>
+                        <p class="text-sm md:text-base">Aucun trade enregistré. Ajoutez votre premier trade ci-dessus.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Group trades by date
+            const tradesByDate = {};
+            trades.forEach(trade => {
+                const dateKey = new Date(trade.date).toDateString();
+                if (!tradesByDate[dateKey]) {
+                    tradesByDate[dateKey] = [];
+                }
+                tradesByDate[dateKey].push(trade);
+            });
+
+            // Sort dates (newest first)
+            const sortedDates = Object.keys(tradesByDate).sort((a, b) => new Date(b) - new Date(a));
+
+            let html = '';
+            sortedDates.forEach(dateKey => {
+                const dateTrades = tradesByDate[dateKey].sort((a, b) => new Date(b.date) - new Date(a.date));
+                const dateObj = new Date(dateKey);
+                const isToday = dateKey === new Date().toDateString();
+                const dayPnL = dateTrades.reduce((sum, trade) => sum + (parseFloat(trade.pnl) || 0), 0);
+
+                html += `
+                    <div class="border-b border-gray-200 dark:border-gray-700 last:border-b-0">
+                        <div class="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800 p-3 md:p-4 border-b border-gray-300 dark:border-gray-600">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-2 md:space-x-3 min-w-0">
+                                    <div class="w-2 md:w-3 h-2 md:h-3 rounded-full ${isToday ? 'bg-primary' : 'bg-gray-400'} flex-shrink-0"></div>
+                                    <h4 class="text-sm md:text-lg font-semibold text-gray-900 dark:text-white truncate">
+                                        ${isToday ? 'Aujourd\'hui' : (window.innerWidth < 768 ? 
+                                            dateObj.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' }) :
+                                            dateObj.toLocaleDateString('fr-FR', { 
+                                                weekday: 'long', 
+                                                year: 'numeric', 
+                                                month: 'long', 
+                                                day: 'numeric' 
+                                            }))}
+                                    </h4>
+                                    <span class="text-xs md:text-sm text-gray-500 dark:text-gray-400 flex-shrink-0">
+                                        (${dateTrades.length} trade${dateTrades.length > 1 ? 's' : ''})
+                                    </span>
+                                </div>
+                                <div class="text-right flex-shrink-0">
+                                    <span class="text-sm md:text-lg font-bold ${dayPnL >= 0 ? 'profit' : 'loss'}">
+                                        $${dayPnL.toFixed(2)}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mobile-scroll">
+                            <table class="w-full mobile-table">
+                                <thead class="bg-gray-50 dark:bg-gray-700">
+                                    <tr>
+                                        <th class="px-3 md:px-6 py-2 md:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Heure</th>
+                                        <th class="px-3 md:px-6 py-2 md:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Paire</th>
+                                        <th class="px-3 md:px-6 py-2 md:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Type</th>
+                                        <th class="px-3 md:px-6 py-2 md:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Taille</th>
+                                        <th class="px-3 md:px-6 py-2 md:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Entrée</th>
+                                        <th class="px-3 md:px-6 py-2 md:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">P&L</th>
+                                        <th class="px-3 md:px-6 py-2 md:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                `;
+
+                dateTrades.forEach((trade, index) => {
+                    html += `
+                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                            <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-xs md:text-sm text-gray-900 dark:text-white">
+                                ${new Date(trade.date).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
+                            </td>
+                            <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-xs md:text-sm font-medium text-gray-900 dark:text-white">
+                                ${trade.currencyPair}
+                            </td>
+                            <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-xs md:text-sm">
+                                <span class="px-1.5 md:px-2 py-0.5 md:py-1 text-xs font-medium rounded-full ${trade.tradeType === 'Long' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'}">
+                                    ${trade.tradeType}
+                                </span>
+                            </td>
+                            <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-xs md:text-sm text-gray-900 dark:text-white">
+                                ${trade.positionSize}
+                            </td>
+                            <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-xs md:text-sm text-gray-900 dark:text-white">
+                                ${trade.entryPrice}
+                            </td>
+                            <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-xs md:text-sm font-medium ${parseFloat(trade.pnl) >= 0 ? 'profit' : 'loss'}">
+                                $${parseFloat(trade.pnl || 0).toFixed(2)}
+                            </td>
+                            <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-xs md:text-sm">
+                                <button onclick="viewTradeDetails(${trade.id})" class="text-primary hover:text-purple-600 mr-2 md:mr-3">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button onclick="deleteTrade(${trade.id})" class="text-red-500 hover:text-red-700">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                });
+
+                html += `
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        function viewTradeDetails(id) {
+            const trades = getCurrentTrades();
+            const trade = trades.find(t => t.id === id);
+            if (!trade) return;
+
+            const modal = document.createElement('div');
+            modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-2 md:px-4';
+            modal.innerHTML = `
+                <div class="bg-white dark:bg-gray-800 p-4 md:p-6 rounded-xl shadow-lg max-w-2xl w-full mx-2 md:mx-4 max-h-[90vh] overflow-y-auto">
+                    <div class="flex justify-between items-center mb-4 md:mb-6">
+                        <h3 class="text-lg md:text-xl font-semibold text-gray-900 dark:text-white">Détails du Trade</h3>
+                        <button onclick="this.closest('.fixed').remove()" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+                            <i class="fas fa-times text-lg md:text-xl"></i>
+                        </button>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 mb-4 md:mb-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Date & Heure</label>
+                            <p class="text-gray-900 dark:text-white text-sm md:text-base">${new Date(trade.date).toLocaleString('fr-FR')}</p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Paire</label>
+                            <p class="text-gray-900 dark:text-white font-medium text-sm md:text-base">${trade.currencyPair}</p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Type</label>
+                            <span class="px-2 py-1 text-xs font-medium rounded-full ${trade.tradeType === 'Long' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'}">
+                                ${trade.tradeType}
+                            </span>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Taille Position</label>
+                            <p class="text-gray-900 dark:text-white text-sm md:text-base">${trade.positionSize}</p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Prix d'entrée</label>
+                            <p class="text-gray-900 dark:text-white text-sm md:text-base">${trade.entryPrice}</p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Stop Loss</label>
+                            <p class="text-gray-900 dark:text-white text-sm md:text-base">${trade.stopLoss || 'N/A'}</p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Take Profit</label>
+                            <p class="text-gray-900 dark:text-white text-sm md:text-base">${trade.takeProfit || 'N/A'}</p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">P&L</label>
+                            <p class="font-medium text-sm md:text-base ${parseFloat(trade.pnl) >= 0 ? 'profit' : 'loss'}">$${parseFloat(trade.pnl || 0).toFixed(2)}</p>
+                        </div>
+                    </div>
+                    ${trade.tradeNotes ? `
+                        <div class="mb-4 md:mb-6">
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Setup & Notes</label>
+                            <div class="bg-gray-50 dark:bg-gray-700 p-3 md:p-4 rounded-lg">
+                                <p class="text-gray-900 dark:text-white whitespace-pre-wrap text-sm md:text-base">${trade.tradeNotes}</p>
+                            </div>
+                        </div>
+                    ` : ''}
+                    ${trade.screenshots && trade.screenshots.length > 0 ? `
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Screenshots (${trade.screenshots.length})</label>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
+                                ${trade.screenshots.map((screenshot, index) => `
+                                    <div class="relative group cursor-pointer" onclick="openImageModal('${screenshot.dataURL}', '${screenshot.name}')">
+                                        <img src="${screenshot.dataURL}" class="w-full h-32 md:h-48 object-cover rounded-lg border border-gray-300 dark:border-gray-600 hover:opacity-80 transition-opacity" alt="${screenshot.name}">
+                                        <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-200 rounded-lg flex items-center justify-center">
+                                            <i class="fas fa-expand text-white opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-lg md:text-xl"></i>
+                                        </div>
+                                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-2 truncate">${screenshot.name}</p>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        function openImageModal(imageUrl, imageName) {
+            const modal = document.createElement('div');
+            modal.className = 'fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50 p-2 md:p-4';
+            modal.innerHTML = `
+                <div class="relative max-w-full max-h-full">
+                    <button onclick="this.closest('.fixed').remove()" class="absolute top-2 right-2 text-white bg-black bg-opacity-50 rounded-full p-2 md:p-3 hover:bg-opacity-70 transition-all z-10">
+                        <i class="fas fa-times text-lg md:text-xl"></i>
+                    </button>
+                    <img src="${imageUrl}" class="max-w-full max-h-full object-contain rounded-lg" alt="${imageName}">
+                    <p class="text-white text-center mt-2 md:mt-4 text-sm md:text-lg">${imageName}</p>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    modal.remove();
+                }
+            });
+        }
+
+        // Handle window resize for responsive adjustments
+        function handleResize() {
+            generateQRCode();
+            if (chart) {
+                chart.resize();
+                updateChart();
+            }
+        }
+
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeData(); // Load data from localStorage
+            initializeTheme();
+            generateQRCode();
+
+            // Handle window resize
+            window.addEventListener('resize', handleResize);
+
+            // Landing page navigation
+            document.getElementById('loginBtn').addEventListener('click', function() {
+                document.getElementById('landingPage').classList.add('hidden');
+                document.getElementById('authModal').classList.remove('hidden');
+            });
+
+            document.getElementById('signupBtn').addEventListener('click', function() {
+                document.getElementById('landingPage').classList.add('hidden');
+                document.getElementById('paymentModal').classList.remove('hidden');
+            });
+
+            document.getElementById('backToLanding').addEventListener('click', function() {
+                document.getElementById('authModal').classList.add('hidden');
+                document.getElementById('landingPage').classList.remove('hidden');
+            });
+
+            // Payment modal
+            document.getElementById('closePayment').addEventListener('click', function() {
+                document.getElementById('paymentModal').classList.add('hidden');
+                document.getElementById('landingPage').classList.remove('hidden');
+            });
+
+            document.getElementById('confirmPayment').addEventListener('click', function() {
+                const username = document.getElementById('desiredUsername').value.trim();
+                if (!username) {
+                    showCustomAlert('Veuillez entrer un nom d\'utilisateur', 'error');
+                    return;
+                }
+                
+                document.getElementById('paymentModal').classList.add('hidden');
+                document.getElementById('successModal').classList.remove('hidden');
+            });
+
+            document.getElementById('closeSuccess').addEventListener('click', function() {
+                document.getElementById('successModal').classList.add('hidden');
+                document.getElementById('landingPage').classList.remove('hidden');
+            });
+
+            // Authentication
+            document.getElementById('authForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const username = document.getElementById('usernameInput').value.trim();
+                const password = document.getElementById('passwordInput').value;
+                
+                if (authenticate(username, password)) {
+                    currentUser = username;
+                    isAuthenticated = true;
+                    document.getElementById('authModal').classList.add('hidden');
+                    document.getElementById('mainApp').classList.remove('hidden');
+                    document.getElementById('currentUserDisplay').textContent = `Connecté: ${username}`;
+                    
+                    // Show admin button if user is admin
+                    if (users[username].role === 'admin') {
+                        document.getElementById('adminBtn').classList.remove('hidden');
+                    }
+                    
+                    initializeChart();
+                    updateStatistics();
+                    renderTradesGroupedByDate();
+                } else {
+                    showAuthError('Nom d\'utilisateur ou mot de passe incorrect');
+                }
+            });
+
+            // Admin panel
+            document.getElementById('adminBtn').addEventListener('click', function() {
+                updateUsersList();
+                document.getElementById('adminModal').classList.remove('hidden');
+            });
+
+            document.getElementById('closeAdmin').addEventListener('click', function() {
+                document.getElementById('adminModal').classList.add('hidden');
+            });
+
+            document.getElementById('generatePassword').addEventListener('click', function() {
+                document.getElementById('generatedPassword').value = generateSecurePassword();
+            });
+
+            document.getElementById('createUser').addEventListener('click', createNewUser);
+
+            // Theme toggle
+            document.getElementById('themeToggle').addEventListener('click', function() {
+                document.documentElement.classList.toggle('dark');
+                if (chart) {
+                    chart.options.plugins.legend.labels.color = document.documentElement.classList.contains('dark') ? '#fff' : '#000';
+                    chart.options.scales.x.ticks.color = document.documentElement.classList.contains('dark') ? '#fff' : '#000';
+                    chart.options.scales.y.ticks.color = document.documentElement.classList.contains('dark') ? '#fff' : '#000';
+                    chart.options.scales.x.grid.color = document.documentElement.classList.contains('dark') ? '#374151' : '#e5e7eb';
+                    chart.options.scales.y.grid.color = document.documentElement.classList.contains('dark') ? '#374151' : '#e5e7eb';
+                    chart.update();
+                }
+            });
+
+            // Logout
+            document.getElementById('logoutBtn').addEventListener('click', function() {
+                currentUser = null;
+                isAuthenticated = false;
+                document.getElementById('mainApp').classList.add('hidden');
+                document.getElementById('landingPage').classList.remove('hidden');
+                document.getElementById('adminBtn').classList.add('hidden');
+                document.getElementById('passwordInput').value = '';
+                document.getElementById('usernameInput').value = '';
+            });
+
+            // Settings events
+            document.getElementById('settingsBtn').addEventListener('click', function() {
+                document.getElementById('initialBalanceInput').value = getCurrentInitialBalance();
+                document.getElementById('settingsModal').classList.remove('hidden');
+            });
+
+            document.getElementById('closeSettings').addEventListener('click', function() {
+                document.getElementById('settingsModal').classList.add('hidden');
+            });
+
+            document.getElementById('cancelSettings').addEventListener('click', function() {
+                document.getElementById('settingsModal').classList.add('hidden');
+            });
+
+            document.getElementById('saveSettings').addEventListener('click', function() {
+                const newBalance = parseFloat(document.getElementById('initialBalanceInput').value);
+                if (newBalance && newBalance > 0) {
+                    updateCurrentUserData({ initialBalance: newBalance });
+                    updateStatistics();
+                    updateChart();
+                    document.getElementById('settingsModal').classList.add('hidden');
+                    showCustomAlert('Paramètres sauvegardés!', 'success');
+                } else {
+                    showCustomAlert('Montant invalide', 'error');
+                }
+            });
+
+            document.getElementById('changePasswordFromSettings').addEventListener('click', function() {
+                document.getElementById('settingsModal').classList.add('hidden');
+                document.getElementById('changePasswordModal').classList.remove('hidden');
+            });
+
+            // Change password events
+            document.getElementById('cancelChangePassword').addEventListener('click', function() {
+                document.getElementById('changePasswordModal').classList.add('hidden');
+                document.getElementById('changePasswordForm').reset();
+            });
+
+            document.getElementById('changePasswordForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const oldPassword = document.getElementById('oldPassword').value;
+                const newPassword = document.getElementById('newPassword').value;
+                const confirmPassword = document.getElementById('confirmPassword').value;
+
+                const userData = getCurrentUserData();
+                if (!userData || oldPassword !== userData.password) {
+                    showCustomAlert('Ancien mot de passe incorrect', 'error');
+                    return;
+                }
+
+                if (newPassword !== confirmPassword) {
+                    showCustomAlert('Mots de passe différents', 'error');
+                    return;
+                }
+
+                if (newPassword.length < 6) {
+                    showCustomAlert('Mot de passe trop court (min 6)', 'error');
+                    return;
+                }
+
+                updateCurrentUserData({ password: newPassword });
+                document.getElementById('changePasswordModal').classList.add('hidden');
+                document.getElementById('changePasswordForm').reset();
+                showCustomAlert('Mot de passe changé!', 'success');
+            });
+
+            // Screenshots preview
+            document.getElementById('tradeScreenshots').addEventListener('change', function(e) {
+                handleScreenshots(e.target.files);
+            });
+
+            // Set current date and time
+            const now = new Date();
+            now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+            document.getElementById('tradeDate').value = now.toISOString().slice(0, 16);
+
+            // Trade form
+            document.getElementById('tradeForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const screenshots = [];
+                const screenshotFiles = document.getElementById('tradeScreenshots').files;
+                
+                if (screenshotFiles.length > 0) {
+                    Array.from(screenshotFiles).forEach(file => {
+                        if (file.type.startsWith('image/')) {
+                            const reader = new FileReader();
+                            reader.onload = function(event) {
+                                screenshots.push({
+                                    name: file.name,
+                                    dataURL: event.target.result,
+                                    size: file.size
+                                });
+                            };
+                            reader.readAsDataURL(file);
+                        }
+                    });
+                }
+
+                const tradeData = {
+                    date: document.getElementById('tradeDate').value,
+                    currencyPair: document.getElementById('currencyPair').value,
+                    tradeType: document.getElementById('tradeType').value,
+                    positionSize: document.getElementById('positionSize').value,
+                    entryPrice: document.getElementById('entryPrice').value,
+                    stopLoss: document.getElementById('stopLoss').value,
+                    takeProfit: document.getElementById('takeProfit').value,
+                    pnl: document.getElementById('pnl').value,
+                    tradeNotes: document.getElementById('tradeNotes').value,
+                    screenshots: screenshots
+                };
+
+                addTrade(tradeData);
+                e.target.reset();
+                document.getElementById('imagePreview').classList.add('hidden');
+                document.getElementById('imagePreview').innerHTML = '';
+                
+                // Reset date to current time
+                const now = new Date();
+                now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+                document.getElementById('tradeDate').value = now.toISOString().slice(0, 16);
+            });
+        });
+
+        // Global functions
+        window.deleteTrade = deleteTrade;
+        window.confirmDeleteTrade = confirmDeleteTrade;
+        window.viewTradeDetails = viewTradeDetails;
+        window.removeScreenshot = removeScreenshot;
+        window.openImageModal = openImageModal;
+        window.copyAddress = copyAddress;
+        window.copyPassword = copyPassword;
+        window.deleteUser = deleteUser;
+        window.confirmDeleteUser = confirmDeleteUser;
+    </script>
+
+
+</body></html>
